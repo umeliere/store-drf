@@ -40,9 +40,10 @@ INSTALLED_APPS = [
     'store',
     'cart',
     'orders',
-    'widget_tweaks',
-    'captcha',
     'rest_framework',
+    'mptt',
+    'django_filters',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -168,4 +169,12 @@ AUTHENTICATION_BACKENDS = [
 
 
 # Link for @login_required
-LOGIN_URL = reverse_lazy('users:login')
+# LOGIN_URL = reverse_lazy('users:login')
+
+
+# setting for DRF
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}

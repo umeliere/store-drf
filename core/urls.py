@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from .yasg import urlpatterns as docs
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,7 +12,7 @@ urlpatterns = [
     path('orders/', include('orders.urls', namespace='orders')),
     path("users/", include("django.contrib.auth.urls")),
     path("api-auth/", include('rest_framework.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + docs
 
 if settings.DEBUG:
     import debug_toolbar

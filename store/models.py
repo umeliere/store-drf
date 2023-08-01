@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse_lazy
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Product(models.Model):
@@ -64,21 +65,21 @@ class Category(models.Model):
         return self.name
 
 
-class Review(models.Model):
+class Review(MPTTModel):
     """
     The review model
     """
     user = models.ForeignKey(User, on_delete=models.PROTECT, editable=False, verbose_name='Пользователь')
     title = models.CharField(verbose_name='Заголовок', max_length=100)
     content = models.TextField(verbose_name="Сообщение", max_length=255)
-    parent = models.ForeignKey(
-        to='self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
+    parent = TreeForeignKey(
+        to='self', verbose_name="Родитель", on_delete=models.CASCADE, blank=True, null=True, related_name='children'
     )
     product = models.ForeignKey(Product, verbose_name="Продукт", on_delete=models.CASCADE, related_name='reviews')
 
     def __str__(self):
-        return f"{self.title} - {self.product}"
+        return f"Комментарий: {self.title} к продукту {self.product}"
 
-    class Meta:
+    class MPTTMeta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
