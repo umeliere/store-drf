@@ -10,13 +10,13 @@ from rest_framework.mixins import (
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import GenericViewSet
 
-from .models import Product, Review
-from .permissions import IsOwnerOrReadOnly
-from .serializers import (
+from store.models import Product, Review
+from store.permissions import IsOwnerOrReadOnly
+from store.serializers import (
     ProductsSerializer,
     ReviewCreateSerializer,
 )
-from .service import ProductFilter, ProductsApiPagination
+from store.service import ProductFilter, ProductsApiPagination
 
 
 class ProductsWithDiscountViewSet(ListModelMixin, GenericViewSet):

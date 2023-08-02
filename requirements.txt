@@ -20,3 +20,4 @@ six==1.8.0
 sqlparse==0.4.4
 typing_extensions==4.6.2
 uritemplate==4.1.1
+djoser 2.2.0

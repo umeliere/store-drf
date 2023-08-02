@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
     'mptt',
     'django_filters',
     'drf_yasg',
@@ -146,6 +148,9 @@ INTERNAL_IPS = ["127.0.0.1"]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# the setting for expanded user model
+AUTH_USER_MODEL = 'users.User'
+
 
 # Connecting to smtp
 EMAIL_HOST = env('EMAIL_HOST')
@@ -167,13 +172,24 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-# Link for @login_required
-# LOGIN_URL = reverse_lazy('users:login')
+# setting for djoser
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {},
+}
 
 
 # setting for DRF
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }

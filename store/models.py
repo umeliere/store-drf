@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.urls import reverse_lazy
 from mptt.models import MPTTModel, TreeForeignKey
@@ -12,12 +12,12 @@ class Product(models.Model):
     weight = models.FloatField(verbose_name='Масса')
     shelf_time = models.DateField(verbose_name='Срок годности')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
-    photo = models.ImageField(upload_to='uploads/%Y/%m/%d/')
+    photo = models.ImageField(upload_to='uploads/%Y/%m/%d/', verbose_name='Изображение товара')
     discount = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='Скидка для товара', default=0,
                                    blank=True)
     is_available = models.BooleanField(verbose_name='Доступен ли товар?', default=False)
-    producer = models.ForeignKey(to='Producer', on_delete=models.PROTECT)
-    category = models.ForeignKey(to='Category', on_delete=models.PROTECT)
+    producer = models.ForeignKey(to='Producer', on_delete=models.PROTECT, verbose_name='Производитель')
+    category = models.ForeignKey(to='Category', on_delete=models.PROTECT, verbose_name='Категория')
 
     class Meta:
         verbose_name = 'Продукт'
@@ -69,7 +69,12 @@ class Review(MPTTModel):
     """
     The review model
     """
-    user = models.ForeignKey(User, on_delete=models.PROTECT, editable=False, verbose_name='Пользователь')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        editable=False,
+        verbose_name='Пользователь'
+    )
     title = models.CharField(verbose_name='Заголовок', max_length=100)
     content = models.TextField(verbose_name="Сообщение", max_length=255)
     parent = TreeForeignKey(

@@ -1,19 +1,28 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import User
-
-from users.models import Profile
-
-
-class ProfileInline(admin.StackedInline):
-    model = Profile
-    can_delete = False
-    verbose_name_plural = 'Профили'
+from django.contrib.auth.admin import UserAdmin as UserAdminModel
+from users.models import User
+from django.utils.translation import gettext_lazy as _
 
 
-class UserAdmin(BaseUserAdmin):
-    inlines = (ProfileInline,)
+class UserAdmin(UserAdminModel):
+    fieldsets = (
+        (None, {"fields": ("username", "slug", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email", "address", "phone", "city")}),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+    )
+    list_display = ("username", "slug", "email", "first_name", "last_name", "email", "address", "phone", "city")
 
 
-admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

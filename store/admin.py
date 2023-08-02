@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Producer, Category, Review
+from store.models import Product, Producer, Category, Review
 
 
 class ReviewAdmin(admin.TabularInline):

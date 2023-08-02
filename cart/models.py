@@ -1,6 +1,6 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum, F
+from django.conf import settings
 from store.models import Product
 
 
@@ -8,7 +8,12 @@ class Cart(models.Model):
     """
     The model for the user cart
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь',
+        editable=False
+    )
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
     class Meta:

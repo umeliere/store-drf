@@ -1,7 +1,7 @@
 from django_filters.rest_framework import BaseInFilter, CharFilter, FilterSet
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Product
+from store.models import Product
 
 
 class CharFilterInFilter(BaseInFilter, CharFilter):

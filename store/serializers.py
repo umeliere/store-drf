@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, Review
+from store.models import Product, Review
 
 
 class FilterReviewListSerializer(serializers.ListSerializer):
@@ -37,6 +37,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     """
     Serializer for review model for ProductsSerializer
     """
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     product = serializers.SlugRelatedField(slug_field='name', read_only=True)
     children = RecursiveSerializer(many=True)
 

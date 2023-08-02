@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeField
 from django.db.models import Sum, F
@@ -10,7 +10,12 @@ class Order(models.Model):
     """
     The model for the user order
     """
-    user = models.ForeignKey(User, on_delete=models.PROTECT, editable=False, verbose_name='Пользователь')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        editable=False,
+        verbose_name='Пользователь'
+    )
     full_name = models.CharField(max_length=100, verbose_name='Полное имя на карте')
     cc_number = CardNumberField(verbose_name='Номер карты', max_length=19)
     cc_expiry = CardExpiryField(verbose_name='Срок действия карты', max_length=5)
