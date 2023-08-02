@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 import environ
-from django.urls import reverse_lazy
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -63,7 +62,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

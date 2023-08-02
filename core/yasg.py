@@ -4,6 +4,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 
+# auto documentation for store-drf
 schema_view = get_schema_view(
    openapi.Info(
       title="Snippets API",
