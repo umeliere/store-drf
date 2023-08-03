@@ -85,6 +85,6 @@ class Review(MPTTModel):
     def __str__(self):
         return f"Комментарий: {self.title} к продукту {self.product}"
 
-    class MPTTMeta:
+    class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"

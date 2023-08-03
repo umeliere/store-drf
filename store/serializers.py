@@ -1,11 +1,6 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from store.models import Product, Review
-from djoser.serializers import UserCreateSerializer
-
-
-User = get_user_model()
 
 
 class FilterReviewListSerializer(serializers.ListSerializer):
@@ -64,11 +59,3 @@ class ProductsSerializer(serializers.ModelSerializer):
         model = Product
         fields = ("name", "weight", "shelf_time", "price", "photo", "discount", "is_available", "producer",
                   "category", 'reviews')
-
-
-class CustomUserCreateSerializer(UserCreateSerializer):
-    password = serializers.CharField(label='Пароль')
-
-    class Meta(UserCreateSerializer.Meta):
-        model = User
-        fields = ('id', 'username', "phone", 'email', 'password',)

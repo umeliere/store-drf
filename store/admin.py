@@ -1,5 +1,6 @@
 from django.contrib import admin
 from store.models import Product, Producer, Category, Review
+from mptt.admin import MPTTModelAdmin
 
 
 class ReviewAdmin(admin.TabularInline):
@@ -29,3 +30,18 @@ class ProducerAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Review)
+class ReviewAdmin(MPTTModelAdmin):
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.user = request.user
+
+        super(ReviewAdmin, self).save_model(
+            request=request,
+            obj=obj,
+            form=form,
+            change=change
+        )

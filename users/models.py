@@ -18,8 +18,6 @@ class User(AbstractUser):
     phone = PhoneNumberField(null=False, verbose_name='Номер телефона')
     city = models.CharField(max_length=100, verbose_name='Город')
 
-    REQUIRED_FIELDS = ("first_name", "last_name", "email", "photo", "address", "phone", "city")
-
     def __str__(self):
         return self.username
 
