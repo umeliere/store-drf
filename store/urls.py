@@ -7,12 +7,12 @@ from store.views import (
     ReviewsViewSet,
 )
 
-app_name = 'store'
 router = routers.SimpleRouter()
 router.register(r'products', ProductsWithoutDiscountViewSet, basename='Products')
 router.register(r'discounts', ProductsWithDiscountViewSet, basename='Discounts')
 router.register(r'reviews', ReviewsViewSet, basename='Reviews')
 
+app_name = 'store'
 urlpatterns = [
     path('', include(router.urls))
 ]

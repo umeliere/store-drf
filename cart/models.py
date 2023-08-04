@@ -23,22 +23,20 @@ class Cart(models.Model):
     def __str__(self):
         return f'Корзина пользователя {self.user}'
 
-    @classmethod
-    def get_total_discount(cls, cart):
+    def get_total_discount(self):
         """
         The method, that counts the total discount of the cart
         """
-        queryset = CartItem.objects.filter(cart=cart).aggregate(total_cost=Sum(
+        queryset = CartItem.objects.filter(cart=self.pk).aggregate(total_cost=Sum(
             (F('product__price') * F('product__discount') / 100) * F('quantity')))['total_cost']
         return queryset
 
-    @classmethod
-    def get_total_cost(cls, cart):
+    def get_total_cost(self):
         """
         The method, that counts the total cost of the cart
         """
-        queryset = CartItem.objects.filter(cart=cart).aggregate(
-            total_cost=Sum(F('product__price') * F('quantity')))['total_cost']
+        queryset = CartItem.objects.filter(cart=self.pk).aggregate(
+            total_cost=Sum(F('product__price') * F('quantity')) - self.get_total_discount())['total_cost']
 
         return queryset
 
@@ -47,7 +45,7 @@ class CartItem(models.Model):
     """
     The model for the instance of the user cart
     """
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     quantity = models.PositiveSmallIntegerField(default=0, verbose_name='Количество')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
 

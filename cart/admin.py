@@ -7,7 +7,7 @@ class OrderItemInline(admin.TabularInline):
     model = CartItem
     raw_id_fields = ['product']
     can_delete = False
-    max_num = 0
+    extra = 1
 
 
 @admin.register(Cart)

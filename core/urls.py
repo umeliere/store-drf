@@ -6,9 +6,9 @@ from core.yasg import urlpatterns as docs
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('cart/', include('cart.urls', namespace='cart')),
-    path('orders/', include('orders.urls', namespace='orders')),
-    path("users/", include("users.urls", namespace='users')),
+    path('api/v1/carts/', include('cart.urls', namespace='cart')),
+    path('api/v1/orders/', include('orders.urls', namespace='orders')),
+    path("api/v1/auth/", include("users.urls", namespace='users')),
     path("api/v1/auth/", include("djoser.urls")),
     path("api/v1/auth/", include("djoser.urls.authtoken")),
     path("api/v1/", include('store.urls', namespace='store')),
