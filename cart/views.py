@@ -12,6 +12,9 @@ from store.models import Product
 
 
 class CartViewSet(ListModelMixin, GenericViewSet):
+    """
+    ViewSet for the cart
+    """
     serializer_class = CartSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -19,7 +22,10 @@ class CartViewSet(ListModelMixin, GenericViewSet):
         return Cart.objects.get_or_create(user=self.request.user)
 
 
-class CartAddView(APIView):
+class CartItemView(APIView):
+    """
+    ViewSet for the cart item, allowed methods: post, delete
+    """
     def post(self, request, pk):
         serializer = CartItemSerializer(data=request.data)
 
@@ -35,3 +41,9 @@ class CartAddView(APIView):
             return Response({"data": serializer.data, "status": status.HTTP_201_CREATED})
 
         return Response({"status": status.HTTP_400_BAD_REQUEST})
+
+    def delete(self, request, pk):
+        cart, _ = Cart.objects.get_or_create(user=self.request.user)
+        product = get_object_or_404(Product, pk=pk)
+        CartItem.objects.get(cart=cart, product=product).delete()
+        return Response({"status": status.HTTP_204_NO_CONTENT})

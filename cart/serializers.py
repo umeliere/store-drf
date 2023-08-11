@@ -4,7 +4,11 @@ from cart.models import Cart, CartItem
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the cart item
+    """
     product = serializers.PrimaryKeyRelatedField(read_only=True)
+    quantity = serializers.IntegerField(default=1)
 
     class Meta:
         model = CartItem
@@ -12,6 +16,9 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the cart
+    """
     items = CartItemSerializer(many=True, read_only=True)
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
