@@ -3,13 +3,12 @@ from django.contrib import admin
 from cart.models import Cart, CartItem
 
 
-class OrderItemInline(admin.TabularInline):
+class CartItemInline(admin.TabularInline):
+    max_num = 0
     model = CartItem
-    raw_id_fields = ['product']
-    can_delete = False
-    extra = 1
+    can_delete = True
 
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    inlines = (OrderItemInline,)
+    inlines = (CartItemInline,)

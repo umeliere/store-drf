@@ -36,9 +36,9 @@ class Cart(models.Model):
         The method, that counts the total cost of the cart
         """
         queryset = CartItem.objects.filter(cart=self.pk).aggregate(
-            total_cost=Sum(F('product__price') * F('quantity')) - self.get_total_discount())['total_cost']
+            total_cost=Sum(F('product__price') * F('quantity')))['total_cost']
 
-        return queryset
+        return queryset if not type(queryset) is None else queryset - self.get_total_discount()
 
 
 class CartItem(models.Model):
@@ -46,7 +46,7 @@ class CartItem(models.Model):
     The model for the instance of the user cart
     """
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    quantity = models.PositiveSmallIntegerField(default=0, verbose_name='Количество')
+    quantity = models.PositiveSmallIntegerField(default=1, verbose_name='Количество')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
 
     class Meta:
