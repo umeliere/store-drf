@@ -13,7 +13,6 @@ class Order(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        editable=False,
         verbose_name='Пользователь'
     )
     full_name = models.CharField(max_length=100, verbose_name='Полное имя на карте')
