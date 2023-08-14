@@ -27,9 +27,10 @@ class CartItemView(APIView):
     View for the cart item, allowed methods: post, delete
     """
     permission_classes = (IsAuthenticated,)
+    serializer_class = CartItemSerializer
 
     def post(self, request, pk):
-        serializer = CartItemSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             quantity = serializer.validated_data['quantity']

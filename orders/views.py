@@ -14,9 +14,10 @@ class OrderCreateView(APIView):
     View to create an order
     """
     permission_classes = (IsAuthenticated,)
+    serializer_class = OrderSerializer
 
     def post(self, request):
-        serializer = OrderSerializer(data=request.data, context={'request': request})
+        serializer = self.serializer_class(data=request.data, context={'request': request})
 
         if serializer.is_valid():
             with transaction.atomic():
