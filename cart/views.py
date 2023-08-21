@@ -1,11 +1,11 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
-
 from cart.models import Cart, CartItem
 from cart.serializers import CartSerializer, CartItemSerializer
 from store.models import Product
@@ -21,21 +21,23 @@ class CartViewSet(ListModelMixin, GenericViewSet):
     def get_queryset(self):
         return Cart.objects.get_or_create(user=self.request.user)
 
+    def get_serializer_class(self):
+        if self.action == "list":
+            return self.serializer_class
+        elif self.action == "add_item":
+            return CartItemSerializer
 
-class CartItemView(APIView):
-    """
-    View for the cart item, allowed methods: post, delete
-    """
-    permission_classes = (IsAuthenticated,)
-    serializer_class = CartItemSerializer
-
-    def post(self, request, pk):
-        serializer = self.serializer_class(data=request.data)
+    @action(methods=['post'], detail=True)
+    def add_item(self, request, pk=None):
+        """
+        Method to add the product item
+        """
+        serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             quantity = serializer.validated_data['quantity']
             cart, cart_created = Cart.objects.get_or_create(user=self.request.user)
-            product = get_object_or_404(Product, pk=pk)
+            product = get_object_or_404(Product, pk=self.kwargs['pk'])
             item, item_created = CartItem.objects.get_or_create(product=product, cart=cart)
 
             item.quantity = quantity
@@ -45,8 +47,15 @@ class CartItemView(APIView):
 
         return Response({"errors": serializer.errors, "status": status.HTTP_400_BAD_REQUEST})
 
-    def delete(self, request, pk):
-        cart, _ = Cart.objects.get_or_create(user=self.request.user)
-        product = get_object_or_404(Product, pk=pk)
-        CartItem.objects.get(cart=cart, product=product).delete()
-        return Response({"status": status.HTTP_204_NO_CONTENT})
+    @action(methods=['delete'], detail=True)
+    def delete_item(self, request, pk=None):
+        """
+        Method to delete the product item
+        """
+        try:
+            cart, _ = Cart.objects.get_or_create(user=self.request.user)
+            product = get_object_or_404(Product, pk=self.kwargs['pk'])
+            CartItem.objects.get(cart=cart, product=product).delete()
+            return Response({"status": status.HTTP_204_NO_CONTENT})
+        except ObjectDoesNotExist:
+            return Response({"errors": "Данный товар не находится в корзине", "status": status.HTTP_400_BAD_REQUEST})
